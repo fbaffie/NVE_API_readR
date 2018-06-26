@@ -82,7 +82,7 @@ read_nve_api <- function(dat = NULL, start_time = NULL, stop_time = NULL, nb_sta
   if (is.null(dat) == TRUE) {
     
     # nb_variable <- 1001  # this is measured discharge
-    # nb_variable <- 6046  # For ODM results. 6011 gives same result.
+    # nb_variable <- 6046  # For ODM results. 6011 gives same result?
     
     # address for ODM corrected modelled discharge
     xgeo_url_corr_modQ <- paste("http://h-web01.nve.no/chartserver/ShowData.aspx?req=getchart&vfmt=xml&ver=1.0&time=",
@@ -101,12 +101,30 @@ read_nve_api <- function(dat = NULL, start_time = NULL, stop_time = NULL, nb_sta
                                 "&chd=ds=tsr,da=",da,",id=vepshydra[1.",nb_station,
                                 ".0.", 6005, ".0],rt=1.0:0,cht=line,mth=mean", sep = "")
     
+    # address for ODM soil water deficit
+    xgeo_url_SoilWater <- paste("http://h-web01.nve.no/chartserver/ShowData.aspx?req=getchart&vfmt=xml&ver=1.0&time=",
+                          start_time,";",stop_time,
+                          "&chd=ds=tsr,da=",da,",id=vepshydra[1.",nb_station,
+                          ".0.", 6014, ".0],rt=1.0:0,cht=line,mth=mean", sep = "")
+    
+    # address for ODM precip
+    xgeo_url_precip <- paste("http://h-web01.nve.no/chartserver/ShowData.aspx?req=getchart&vfmt=xml&ver=1.0&time=",
+                                start_time,";",stop_time,
+                                "&chd=ds=tsr,da=",da,",id=vepshydra[1.",nb_station,
+                                ".0.", 6001, ".0],rt=1.0:0,cht=line,mth=sum", sep = "")
+    
     # print(xgeo_url)
     # xgeo_url <- getURL(xgeo_url)
     
     
     failsafe <- failwith(NULL, parse_xml_and_save)
-    failsafe(xgeo_url_corr_modQ, nb_station, name_station)
+  
+     failsafe(xgeo_url_corr_modQ, nb_station, name_station)
+    # 
+    # failsafe(xgeo_url_Temp, nb_station, name_station)
+    # failsafe(xgeo_url_SWE, nb_station, name_station)  # checked the data quick and more catchments that I would have expected had snow. TO CHECK
+    # failsafe(xgeo_url_SoilWater, nb_station, name_station)
+    # failsafe(xgeo_url_precip, nb_station, name_station)
     
     # parse_xml_and_save(xgeo_url)
     
